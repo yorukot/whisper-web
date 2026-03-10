@@ -13,7 +13,7 @@ import subprocess
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 from typing import Dict, Any, Optional, List
 
-from fastapi import FastAPI, UploadFile, Form, WebSocket, HTTPException
+from fastapi import FastAPI, UploadFile, Form, WebSocket, HTTPException, WebSocketDisconnect
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -342,7 +342,11 @@ async def ws(job_id: str, ws: WebSocket):
     try:
         while True:
             msg = await rj.queue.get()
-            await ws.send_json(msg)
+            try:
+                await ws.send_json(msg)
+            except (WebSocketDisconnect, Exception):
+                # Client disconnected (e.g. tab closed / page refresh); stop sending
+                break
             if msg.get("type") in ("done", "error", "paused"):
                 break
     finally:
