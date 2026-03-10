@@ -73,8 +73,9 @@ async function uploadFile(file, traditional) {
 
   // Replace tempId with real job_id
   card.setJobId(job_id);
+  const state = activeJobs.get(tempId);
   activeJobs.delete(tempId);
-  activeJobs.set(job_id, card);
+  activeJobs.set(job_id, state);
 
   connectWS(job_id, card);
 }
