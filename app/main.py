@@ -17,7 +17,7 @@ from fastapi import FastAPI, UploadFile, Form, WebSocket, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-DATA_DIR = os.path.expanduser(os.environ.get("WHISPER_DATA_DIR", "/data"))
+DATA_DIR = os.path.expanduser("~/whisper-data")
 UPLOADS_DIR = f"{DATA_DIR}/uploads"
 OUTPUTS_DIR = f"{DATA_DIR}/outputs"
 JOBS_DB = f"{DATA_DIR}/jobs.json"
