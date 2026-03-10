@@ -398,6 +398,15 @@ async def _run_job(job_id: str, src_path: str, filename: str, traditional: bool)
         env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
         env["PYTHONUNBUFFERED"] = "1"
 
+        # Ensure CUDA libraries are discoverable (needed on non-Docker setups)
+        cuda_lib_paths = [
+            "/home/yorukot/.local/lib/python3.12/site-packages/nvidia/cublas/lib",
+            "/usr/local/lib/ollama/cuda_v12",
+        ]
+        existing = env.get("LD_LIBRARY_PATH", "")
+        extra = ":".join(p for p in cuda_lib_paths if os.path.isdir(p))
+        env["LD_LIBRARY_PATH"] = f"{extra}:{existing}" if existing else extra
+
         cmd = [
             "python3", "whisper_worker_entry.py",
             src_path,
