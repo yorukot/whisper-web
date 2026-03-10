@@ -8,12 +8,9 @@ import zipfile
 import asyncio
 import threading
 import subprocess
-
-# Directory where main.py lives (works both in Docker /app and on host)
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
 from typing import Dict, Any, Optional, List
 
-from fastapi import FastAPI, UploadFile, Form, WebSocket, HTTPException, WebSocketDisconnect
+from fastapi import FastAPI, UploadFile, Form, WebSocket, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -342,11 +339,7 @@ async def ws(job_id: str, ws: WebSocket):
     try:
         while True:
             msg = await rj.queue.get()
-            try:
-                await ws.send_json(msg)
-            except (WebSocketDisconnect, Exception):
-                # Client disconnected (e.g. tab closed / page refresh); stop sending
-                break
+            await ws.send_json(msg)
             if msg.get("type") in ("done", "error", "paused"):
                 break
     finally:
@@ -420,7 +413,7 @@ async def _run_job(job_id: str, src_path: str, filename: str, traditional: bool)
             stderr=subprocess.PIPE,
             text=True,
             env=env,
-            cwd=APP_DIR,
+            cwd="/app",
         )
         rj.proc = proc
 

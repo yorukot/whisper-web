@@ -52,18 +52,10 @@ class WhisperRunner:
     在 subprocess 裡，CUDA_VISIBLE_DEVICES 通常會只暴露 1 張卡，
     所以這裡 device_index 用 0 就好。
     """
-    def __init__(self, model_name: str = "large-v3-turbo"):
-        import ctranslate2
-        if ctranslate2.get_cuda_device_count() > 0:
-            device = "cuda"
-            compute_type = "float16"
-        else:
-            device = "cpu"
-            compute_type = "int8"
-
+    def __init__(self, model_name: str = "large-v3-turbo", compute_type: str = "float16"):
         self.model = WhisperModel(
             model_name,
-            device=device,
+            device="cuda",
             device_index=0,
             compute_type=compute_type,
         )
