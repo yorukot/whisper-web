@@ -53,20 +53,12 @@ class WhisperRunner:
     所以這裡 device_index 用 0 就好。
     """
     def __init__(self, model_name: str = "large-v3-turbo"):
-        try:
-            self.model = WhisperModel(
-                model_name,
-                device="cuda",
-                device_index=0,
-                compute_type="float16",
-            )
-        except ValueError:
-            self.model = WhisperModel(
-                model_name,
-                device="cuda",
-                device_index=0,
-                compute_type="int8_float16",
-            )
+        self.model = WhisperModel(
+            model_name,
+            device="cuda",
+            device_index=0,
+            compute_type="int8",
+        )
         self.cc = OpenCC("s2t")
 
     def run(
