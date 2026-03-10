@@ -57,7 +57,7 @@ class WhisperRunner:
             model_name,
             device="cuda",
             device_index=0,
-            compute_type="int8_float16",
+            compute_type="int8",
         )
         self.cc = OpenCC("s2t")
 
