@@ -19,17 +19,14 @@ def main():
     outputs_dir = sys.argv[4]
     traditional = bool(int(sys.argv[5]))
 
-    runner = WhisperRunner()
-
     def on_event(msg):
         print(json.dumps(msg, ensure_ascii=False), flush=True)
 
     def is_cancelled():
-        # subprocess 版的取消靠 parent 發 SIGTERM/SIGKILL，
-        # 不靠 shared flag，所以這裡永遠 False。
         return False
 
     try:
+        runner = WhisperRunner()
         stats = runner.run(
             src_path=src_path,
             job_id=job_id,
