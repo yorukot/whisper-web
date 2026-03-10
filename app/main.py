@@ -413,7 +413,7 @@ async def _run_job(job_id: str, src_path: str, filename: str, traditional: bool)
             stderr=subprocess.PIPE,
             text=True,
             env=env,
-            cwd="/app",
+            cwd=os.path.dirname(os.path.abspath(__file__)),
         )
         rj.proc = proc
 
