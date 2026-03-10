@@ -459,6 +459,9 @@ async def _run_job(job_id: str, src_path: str, filename: str, traditional: bool)
                 except Exception:
                     err_msg = "unknown"
 
+            import logging
+            logging.warning("[job %s] status=%s rc=%s err=%s", job_id, status, rc, err_msg)
+
         finally:
             rj.proc = None
 
